@@ -10,6 +10,8 @@ public class Main {
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		
+		System.out.println(screenSize.toString());
+		
 		Window window = new Window(screenSize);
 		window.start();
 		

@@ -6,6 +6,11 @@ import java.awt.image.*;
 
 import javax.swing.*;
 
+import com.thehe.WHGRL.entity.Obstacle;
+import com.thehe.WHGRL.entity.Player;
+import com.thehe.WHGRL.map.Tile;
+import com.thehe.WHGRL.map.TileType;
+
 public class Window implements Runnable, KeyListener {
 	
 	public static double width;
@@ -34,11 +39,16 @@ public class Window implements Runnable, KeyListener {
 	
 	public boolean running;
 	
+	// tests
+	Tile test;
+	Tile test2;
+	Player player;
+	Obstacle obstacle;
+	
 	public Window(Dimension screenSize) {
 		
 		width = screenSize.getWidth() / 2.0;
 		height = screenSize.getHeight() / 2.0;
-
 		
 		lastSecond = System.nanoTime();
 		lastFrame = System.nanoTime();
@@ -48,7 +58,7 @@ public class Window implements Runnable, KeyListener {
 				.getDefaultScreenDevice()
 				.getDefaultConfiguration();
 		
-		window = new JFrame("cartpole");
+		window = new JFrame("WHG");
 		canvas = new Canvas(graphicsConfiguration);
 		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,6 +80,23 @@ public class Window implements Runnable, KeyListener {
 	
 		canvas.createBufferStrategy(2);
 		bufferStrategy = canvas.getBufferStrategy();
+		
+		test = new Tile(TileType.REGULAR);
+		test2 = new Tile(TileType.REGULAR);
+		player = new Player();
+		obstacle = new Obstacle();
+		
+		test.position.x = 50;
+		test.position.y = 50;
+		
+		test2.position.x = 75;
+		test2.position.y = 75;
+		
+		player.position.x = 200;
+		player.position.y = 200;
+		
+		obstacle.position.x = 300;
+		obstacle.position.y = 300;
 		
 	}
 
@@ -115,7 +142,7 @@ public class Window implements Runnable, KeyListener {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-			
+				
 			
 		}
 		
@@ -126,6 +153,11 @@ public class Window implements Runnable, KeyListener {
 		Graphics2D graphics2D = (Graphics2D) bufferStrategy.getDrawGraphics();
 		graphics2D.setColor(Color.WHITE);
 		graphics2D.fillRect(0, 0, (int) width, (int) height);
+		
+		test.render(graphics2D);
+		test2.render(graphics2D);
+		player.render(graphics2D);
+		obstacle.render(graphics2D);
 		
 		graphics2D.dispose();
 		
