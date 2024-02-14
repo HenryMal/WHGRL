@@ -1,9 +1,13 @@
 package com.thehe.WHGRL.map;
 
+import java.awt.Graphics2D;
 import java.awt.geom.Area;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import com.thehe.WHGRL.entity.Obstacle;
 
 public class Map {
 	
@@ -14,11 +18,23 @@ public class Map {
 	public List<Tile> moveableTiles;
 	public List<Tile> spawnTiles;
 	public List<Tile> endTiles;
+	public List<Obstacle> obstacles;
 	
 	public Area moveableArea;
 	
 	
-	public Map() {
+	public Map(File file) throws FileNotFoundException {
+		backgroundTiles = new ArrayList<Tile>();
+		moveableTiles = new ArrayList<Tile>();
+		spawnTiles = new ArrayList<Tile>();
+		endTiles = new ArrayList<Tile>();
+		obstacles = new ArrayList<Obstacle>();
+		
+		readMapFile(file);
+	}
+	
+	public Map(String fileName) throws FileNotFoundException {
+		this(new File(fileName));
 	}
 	
 	public void readMapFile(File file) throws FileNotFoundException {
@@ -46,11 +62,62 @@ public class Map {
 		 */
 		Scanner scanner = new Scanner(file);
 		
+		String tileData = "";
+		String obstacleData = "";
+		
+        for(int i = 0; i < GRID_HEIGHT; i++) {
+            
+        	tileData = scanner.next();
+            
+            for(int j = 0; j < GRID_WIDTH; j++) {
+            	
+                addTileToList(tileData.charAt(j), i, j);
+            }
+            
+        }
+		
 		String tileCharacter = scanner.next();
 		
 		
 		
 		scanner.close();
+		
+	}
+	
+	public void addTileToList(char tileCharacter, int indexX, int indexY) {
+		switch(tileCharacter) {
+			case 'W': 
+				backgroundTiles.add(new Tile(TileType.BACKGROUND, indexX, indexY));
+				break;
+			case 'M': 
+				moveableTiles.add(new Tile(TileType.REGULAR, indexX, indexY));
+				break;
+			case 'S': 
+				spawnTiles.add(new Tile(TileType.SPAWN, indexX, indexY));
+				break;
+			case 'E': 
+				endTiles.add(new Tile(TileType.GOAL, indexX, indexY));
+				break;
+		}
+	}
+	
+	public void render(Graphics2D graphics2D) {
+		
+		for(Tile tile : backgroundTiles) {
+			tile.render(graphics2D);
+		}
+		
+		for(Tile tile : moveableTiles) {
+			tile.render(graphics2D);
+		}
+		
+		for(Tile tile : spawnTiles) {
+			tile.render(graphics2D);
+		}
+		
+		for(Tile tile : endTiles) {
+			tile.render(graphics2D);
+		}
 		
 	}
 	

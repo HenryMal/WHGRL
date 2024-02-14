@@ -1,12 +1,13 @@
 package com.thehe.WHGRL;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 import com.thehe.WHGRL.utils.Window;
 
 public class Main {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		

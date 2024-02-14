@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.RectangularShape;
 
+import com.thehe.WHGRL.map.Tile;
 import com.thehe.WHGRL.utils.Vector;
 
 public abstract class Entity {
@@ -22,6 +23,9 @@ public abstract class Entity {
 	public Entity() {
 		position = new Vector();
 		velocity = new Vector();
+		
+		size = Tile.SIZE / 2;
+		outlineSize = Tile.SIZE * 0.67;
 	}
 	
 	public void render(Graphics2D graphics2D) {

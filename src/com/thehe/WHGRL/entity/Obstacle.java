@@ -10,8 +10,7 @@ public class Obstacle extends Entity {
 	public Obstacle() {
 		super();
 		
-		size = Tile.size / 2;
-		outlineSize = Tile.size * 0.67;
+
 		
 		body = new Ellipse2D.Double();
 		entityColor = new Color(0, 0, 255);

@@ -3,18 +3,20 @@ package com.thehe.WHGRL.utils;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.io.FileNotFoundException;
 
 import javax.swing.*;
 
 import com.thehe.WHGRL.entity.Obstacle;
 import com.thehe.WHGRL.entity.Player;
+import com.thehe.WHGRL.map.Map;
 import com.thehe.WHGRL.map.Tile;
 import com.thehe.WHGRL.map.TileType;
 
 public class Window implements Runnable, KeyListener {
 	
-	public static double width;
-	public static double height;
+	public int width;
+	public int height;
 	
 	// window boilerplate
 	public JFrame window;
@@ -44,11 +46,15 @@ public class Window implements Runnable, KeyListener {
 	Tile test2;
 	Player player;
 	Obstacle obstacle;
+	Map map;
 	
-	public Window(Dimension screenSize) {
+	public Window(Dimension screenSize) throws FileNotFoundException {
 		
-		width = screenSize.getWidth() / 2.0;
-		height = screenSize.getHeight() / 2.0;
+		
+		map = new Map("maps/level_1.txt");
+		
+		width = Tile.SIZE * Map.GRID_WIDTH;
+		height = Tile.SIZE * Map.GRID_HEIGHT;
 		
 		lastSecond = System.nanoTime();
 		lastFrame = System.nanoTime();
@@ -62,10 +68,10 @@ public class Window implements Runnable, KeyListener {
 		canvas = new Canvas(graphicsConfiguration);
 		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.getContentPane().setPreferredSize(new Dimension((int) width, (int) height));
+		window.getContentPane().setPreferredSize(new Dimension(width, height));
 		
-		canvas.setPreferredSize(new Dimension((int) width, (int) height));
-		canvas.setSize(new Dimension((int) width, (int) height));
+		canvas.setPreferredSize(new Dimension(width, height));
+		canvas.setSize(new Dimension(width, height));
 		canvas.addKeyListener(this);
 		canvas.setFocusable(true);
 		
@@ -81,22 +87,17 @@ public class Window implements Runnable, KeyListener {
 		canvas.createBufferStrategy(2);
 		bufferStrategy = canvas.getBufferStrategy();
 		
-		test = new Tile(TileType.REGULAR);
-		test2 = new Tile(TileType.REGULAR);
 		player = new Player();
 		obstacle = new Obstacle();
 		
-		test.position.x = 50;
-		test.position.y = 50;
-		
-		test2.position.x = 75;
-		test2.position.y = 75;
 		
 		player.position.x = 200;
 		player.position.y = 200;
 		
 		obstacle.position.x = 300;
 		obstacle.position.y = 300;
+
+		
 		
 	}
 
@@ -152,10 +153,10 @@ public class Window implements Runnable, KeyListener {
 		
 		Graphics2D graphics2D = (Graphics2D) bufferStrategy.getDrawGraphics();
 		graphics2D.setColor(Color.WHITE);
-		graphics2D.fillRect(0, 0, (int) width, (int) height);
+		graphics2D.fillRect(0, 0, width, height);
 		
-		test.render(graphics2D);
-		test2.render(graphics2D);
+
+		map.render(graphics2D);
 		player.render(graphics2D);
 		obstacle.render(graphics2D);
 		
