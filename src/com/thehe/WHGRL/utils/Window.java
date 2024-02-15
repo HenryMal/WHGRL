@@ -90,12 +90,19 @@ public class Window implements Runnable, KeyListener {
 		player = new Player();
 		obstacle = new Obstacle();
 		
+		Vector something = new Vector(map.spawnTiles.get(0).position.x, map.spawnTiles.get(0).position.y);
+		Vector somethingTwo = new Vector(map.spawnTiles.get(map.spawnTiles.size() - 1).position.x + Tile.SIZE,
+				map.spawnTiles.get(map.spawnTiles.size() - 1).position.y + Tile.SIZE);
 		
-		player.position.x = 200;
-		player.position.y = 200;
+		something.addVector(somethingTwo);
 		
-		obstacle.position.x = 300;
-		obstacle.position.y = 300;
+		something.x /= 2;
+		something.y /= 2;
+		
+		
+		player.position.x = something.x;
+		player.position.y = something.y;
+		
 
 		
 		
@@ -158,7 +165,6 @@ public class Window implements Runnable, KeyListener {
 
 		map.render(graphics2D);
 		player.render(graphics2D);
-		obstacle.render(graphics2D);
 		
 		graphics2D.dispose();
 		
@@ -172,7 +178,7 @@ public class Window implements Runnable, KeyListener {
 	}
 	
 	public void tick() {
-		
+		map.tick();
 	}
 	
 	public void start() {

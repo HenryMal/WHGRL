@@ -15,6 +15,9 @@ public class Player extends Entity {
 	public Player() {
 		super();
 		
+		
+		size = Tile.SIZE / 2;
+		outlineSize = Tile.SIZE * 0.67;
 
 		body = new Rectangle2D.Double();
 		entityColor = new Color(255, 0, 0);

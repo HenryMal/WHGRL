@@ -29,5 +29,9 @@ public class Vector {
 		x *= scalar;
 		y *= scalar;
 	}
+	
+	public boolean equals(Vector vector) {
+		return (x == vector.x && y == vector.y);
+	}
 
 }

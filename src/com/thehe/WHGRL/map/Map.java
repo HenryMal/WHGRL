@@ -1,6 +1,11 @@
 package com.thehe.WHGRL.map;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.geom.Area;
 import java.io.*;
 import java.util.ArrayList;
@@ -8,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.thehe.WHGRL.entity.Obstacle;
+import com.thehe.WHGRL.utils.Vector;
 
 public class Map {
 	
@@ -30,6 +36,8 @@ public class Map {
 		endTiles = new ArrayList<Tile>();
 		obstacles = new ArrayList<Obstacle>();
 		
+		moveableArea = new Area();
+		
 		readMapFile(file);
 	}
 	
@@ -39,27 +47,6 @@ public class Map {
 	
 	public void readMapFile(File file) throws FileNotFoundException {
 		
-		/*
-		 *  WWWWWWWWWWWWWWWWWWWWWW
-			WWWWWWWWWWWWWWWWWWWWWW
-			WWWWWWWWWWWWWWWWWWWWWW
-			WWWWWWWWWWWWWWWWWWWWWW
-			WWSSSWWWWWWWWWWMMEEEWW
-			WWSSSWMMMMMMMMMMWEEEWW
-			WWSSSWMMMMMMMMMMWEEEWW
-			WWSSSWMMMMMMMMMMWEEEWW
-			WWSSSWMMMMMMMMMMWEEEWW
-			WWSSSMMWWWWWWWWWWEEEWW
-			WWWWWWWWWWWWWWWWWWWWWW
-			WWWWWWWWWWWWWWWWWWWWWW
-			WWWWWWWWWWWWWWWWWWWWWW
-			WWWWWWWWWWWWWWWWWWWWWW
-			
-			16 | 6 | 6 | 6 | 5 | 0
-			6 | 7 | 16 | 7 | 5 | 0
-			16 | 8 | 6 | 8 | 5 | 0
-			6 | 9 | 16 | 9 | 5 | 0
-		 */
 		Scanner scanner = new Scanner(file);
 		
 		String tileData = "";
@@ -76,33 +63,84 @@ public class Map {
             
         }
 		
-		String tileCharacter = scanner.next();
-		
-		
+		while(scanner.hasNext()) {
+			obstacleData = scanner.next();
+			createObstacles(obstacleData);
+		}
 		
 		scanner.close();
 		
 	}
 	
 	public void addTileToList(char tileCharacter, int indexX, int indexY) {
+		
 		switch(tileCharacter) {
 			case 'W': 
 				backgroundTiles.add(new Tile(TileType.BACKGROUND, indexX, indexY));
 				break;
 			case 'M': 
 				moveableTiles.add(new Tile(TileType.REGULAR, indexX, indexY));
+				moveableArea.add(new Area(new Rectangle(
+						moveableTiles.get(moveableTiles.size() - 1).position.x,
+						moveableTiles.get(moveableTiles.size() - 1).position.y,
+						Tile.SIZE,
+						Tile.SIZE)));
+				
 				break;
 			case 'S': 
 				spawnTiles.add(new Tile(TileType.SPAWN, indexX, indexY));
+				moveableArea.add(new Area(new Rectangle(
+						spawnTiles.get(spawnTiles.size() - 1).position.x,
+						spawnTiles.get(spawnTiles.size() - 1).position.y,
+						Tile.SIZE,
+						Tile.SIZE)));
 				break;
 			case 'E': 
 				endTiles.add(new Tile(TileType.GOAL, indexX, indexY));
+				moveableArea.add(new Area(new Rectangle(
+						endTiles.get(endTiles.size() - 1).position.x,
+						endTiles.get(endTiles.size() - 1).position.y,
+						Tile.SIZE,
+						Tile.SIZE)));
 				break;
 		}
 	}
 	
+	public void createObstacles(String obstacleData) {
+		
+		Obstacle newObstacle = new Obstacle();
+		String[] obstaclePositions = obstacleData.split(",");
+		Vector newVector;
+		
+		newObstacle.position.x = Integer.parseInt(obstaclePositions[0]);
+		newObstacle.position.y = Integer.parseInt(obstaclePositions[1]);
+		
+		newObstacle.velocity.x = Integer.parseInt(obstaclePositions[obstaclePositions.length - 2]);
+		newObstacle.velocity.y = Integer.parseInt(obstaclePositions[obstaclePositions.length - 1]);
+		
+		for(int i = 2; i < obstaclePositions.length - 3; i++) {
+			newVector = new Vector(Integer.parseInt(obstaclePositions[i]), Integer.parseInt(obstaclePositions[++i]));
+			newVector.scaleVector(Tile.SIZE);
+			newVector.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2));
+			newObstacle.phases.add(newVector);
+		}
+		
+		newObstacle.position.scaleVector(Tile.SIZE);
+		newObstacle.position.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2));
+		
+		newObstacle.phases.add(new Vector(newObstacle.position.x, newObstacle.position.y));
+		
+		
+		obstacles.add(newObstacle);
+		
+		
+	}
+	
 	public void render(Graphics2D graphics2D) {
 		
+		graphics2D.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+		
+
 		for(Tile tile : backgroundTiles) {
 			tile.render(graphics2D);
 		}
@@ -119,6 +157,23 @@ public class Map {
 			tile.render(graphics2D);
 		}
 		
+		for(Obstacle obstacle : obstacles) {
+			obstacle.render(graphics2D);
+		}
+		
+		graphics2D.setColor(Color.BLACK);
+		graphics2D.setStroke(new BasicStroke(4));
+		graphics2D.draw(moveableArea);
+		
+
+		
+	}
+	
+	// move this to the game
+	public void tick() {
+		for(Obstacle obstacle : obstacles) {
+			obstacle.tick();
+		}
 	}
 	
 }
