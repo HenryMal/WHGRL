@@ -5,8 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,17 +23,16 @@ public class Map {
 	public List<Tile> backgroundTiles;
 	public List<Tile> moveableTiles;
 	public List<Tile> spawnTiles;
-	public List<Tile> endTiles;
+	public List<Tile> goalTiles;
 	public List<Obstacle> obstacles;
 	
 	public Area moveableArea;
-	
 	
 	public Map(File file) throws FileNotFoundException {
 		backgroundTiles = new ArrayList<Tile>();
 		moveableTiles = new ArrayList<Tile>();
 		spawnTiles = new ArrayList<Tile>();
-		endTiles = new ArrayList<Tile>();
+		goalTiles = new ArrayList<Tile>();
 		obstacles = new ArrayList<Obstacle>();
 		
 		moveableArea = new Area();
@@ -80,7 +79,7 @@ public class Map {
 				break;
 			case 'M': 
 				moveableTiles.add(new Tile(TileType.REGULAR, indexX, indexY));
-				moveableArea.add(new Area(new Rectangle(
+				moveableArea.add(new Area(new Rectangle2D.Double(
 						moveableTiles.get(moveableTiles.size() - 1).position.x,
 						moveableTiles.get(moveableTiles.size() - 1).position.y,
 						Tile.SIZE,
@@ -89,17 +88,17 @@ public class Map {
 				break;
 			case 'S': 
 				spawnTiles.add(new Tile(TileType.SPAWN, indexX, indexY));
-				moveableArea.add(new Area(new Rectangle(
+				moveableArea.add(new Area(new Rectangle2D.Double(
 						spawnTiles.get(spawnTiles.size() - 1).position.x,
 						spawnTiles.get(spawnTiles.size() - 1).position.y,
 						Tile.SIZE,
 						Tile.SIZE)));
 				break;
 			case 'E': 
-				endTiles.add(new Tile(TileType.GOAL, indexX, indexY));
-				moveableArea.add(new Area(new Rectangle(
-						endTiles.get(endTiles.size() - 1).position.x,
-						endTiles.get(endTiles.size() - 1).position.y,
+				goalTiles.add(new Tile(TileType.GOAL, indexX, indexY));
+				moveableArea.add(new Area(new Rectangle2D.Double(
+						goalTiles.get(goalTiles.size() - 1).position.x,
+						goalTiles.get(goalTiles.size() - 1).position.y,
 						Tile.SIZE,
 						Tile.SIZE)));
 				break;
@@ -153,7 +152,7 @@ public class Map {
 			tile.render(graphics2D);
 		}
 		
-		for(Tile tile : endTiles) {
+		for(Tile tile : goalTiles) {
 			tile.render(graphics2D);
 		}
 		
@@ -169,7 +168,6 @@ public class Map {
 		
 	}
 	
-	// move this to the game
 	public void tick() {
 		for(Obstacle obstacle : obstacles) {
 			obstacle.tick();

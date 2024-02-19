@@ -25,9 +25,7 @@ public class Obstacle extends Entity {
 	
 		body = new Ellipse2D.Double();
 		entityColor = new Color(0, 0, 255);
-		
-		
-		
+	
 	}
 
 	

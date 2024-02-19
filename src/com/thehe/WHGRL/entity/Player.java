@@ -22,7 +22,12 @@ public class Player extends Entity {
 		body = new Rectangle2D.Double();
 		entityColor = new Color(255, 0, 0);
 		
+		velocity.x = 2;
+
+		
 	}
+	
+	
 	
 	@Override
 	public void render(Graphics2D graphics2D) {
@@ -31,7 +36,7 @@ public class Player extends Entity {
 	}
 	
 	public void tick() {
-		
+		position.addVector(velocity);
 	}
 
 }

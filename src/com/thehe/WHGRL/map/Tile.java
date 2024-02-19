@@ -8,7 +8,7 @@ import com.thehe.WHGRL.utils.Window;
 
 public class Tile {
 	
-	public static final int SIZE = 35;
+	public static final double SIZE = 35;
 	public static int tileCount;
 	
 	public Vector position;

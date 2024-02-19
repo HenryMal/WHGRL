@@ -4,9 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.FileNotFoundException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.*;
 
+import com.thehe.WHGRL.Game;
 import com.thehe.WHGRL.entity.Obstacle;
 import com.thehe.WHGRL.entity.Player;
 import com.thehe.WHGRL.map.Map;
@@ -41,6 +44,9 @@ public class Window implements Runnable, KeyListener {
 	
 	public boolean running;
 	
+	public Game game;
+
+	
 	// tests
 	Tile test;
 	Tile test2;
@@ -48,13 +54,14 @@ public class Window implements Runnable, KeyListener {
 	Obstacle obstacle;
 	Map map;
 	
+	
 	public Window(Dimension screenSize) throws FileNotFoundException {
 		
 		
-		map = new Map("maps/level_1.txt");
+		game = new Game();
 		
-		width = Tile.SIZE * Map.GRID_WIDTH;
-		height = Tile.SIZE * Map.GRID_HEIGHT;
+		width =  (int) (Tile.SIZE * Map.GRID_WIDTH);
+		height = (int) (Tile.SIZE * Map.GRID_HEIGHT);
 		
 		lastSecond = System.nanoTime();
 		lastFrame = System.nanoTime();
@@ -86,22 +93,7 @@ public class Window implements Runnable, KeyListener {
 	
 		canvas.createBufferStrategy(2);
 		bufferStrategy = canvas.getBufferStrategy();
-		
-		player = new Player();
-		obstacle = new Obstacle();
-		
-		Vector something = new Vector(map.spawnTiles.get(0).position.x, map.spawnTiles.get(0).position.y);
-		Vector somethingTwo = new Vector(map.spawnTiles.get(map.spawnTiles.size() - 1).position.x + Tile.SIZE,
-				map.spawnTiles.get(map.spawnTiles.size() - 1).position.y + Tile.SIZE);
-		
-		something.addVector(somethingTwo);
-		
-		something.x /= 2;
-		something.y /= 2;
-		
-		
-		player.position.x = something.x;
-		player.position.y = something.y;
+
 		
 
 		
@@ -163,8 +155,7 @@ public class Window implements Runnable, KeyListener {
 		graphics2D.fillRect(0, 0, width, height);
 		
 
-		map.render(graphics2D);
-		player.render(graphics2D);
+		game.render(graphics2D);
 		
 		graphics2D.dispose();
 		
@@ -178,7 +169,7 @@ public class Window implements Runnable, KeyListener {
 	}
 	
 	public void tick() {
-		map.tick();
+		game.tick();
 	}
 	
 	public void start() {
@@ -194,14 +185,17 @@ public class Window implements Runnable, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// HAVE THE SCENE HANDLE SUM
 
 	}
+
+
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+
 	}
+
+
+
 
 }
