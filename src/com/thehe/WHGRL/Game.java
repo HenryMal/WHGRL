@@ -66,6 +66,36 @@ public class Game extends JPanel {
 		
 	}
 	
+	public void checkPlayerCollisionsWithMap() {
+		collideLeft = (!map.moveableArea.contains(
+				(player.position.x - player.outlineSize / 2) + player.outlineSize,
+				player.position.y - player.outlineSize / 2)
+				&& !map.moveableArea.contains(
+						(player.position.x - player.outlineSize / 2) + player.outlineSize,
+						(player.position.y - player.outlineSize / 2) + player.outlineSize));
+		
+		collideRight = (!map.moveableArea.contains(
+				(player.position.x - player.outlineSize / 2) + player.outlineSize,
+				player.position.y - player.outlineSize / 2)
+				&& !map.moveableArea.contains(
+						(player.position.x - player.outlineSize / 2) + player.outlineSize,
+						(player.position.y - player.outlineSize / 2) + player.outlineSize));
+		
+		collideTop = (!map.moveableArea.contains(
+				player.position.x - player.outlineSize / 2,
+				player.position.y - player.outlineSize / 2)
+				&& !map.moveableArea.contains(
+						(player.position.x - player.outlineSize / 2) + player.outlineSize, 
+						player.position.y - player.outlineSize / 2));
+		
+		collideBottom = (!map.moveableArea.contains(
+				player.position.x - player.outlineSize / 2,
+				(player.position.y - player.outlineSize / 2) + player.outlineSize)
+				&& !map.moveableArea.contains(
+						(player.position.x - player.outlineSize / 2) + player.outlineSize, 
+						(player.position.y - player.outlineSize / 2) + player.outlineSize));
+	}
+	
 	
 	public void render(Graphics2D graphics2D) {
 		map.render(graphics2D);
@@ -75,73 +105,16 @@ public class Game extends JPanel {
 	
 	public void tick() {
 		
-
+		checkPlayerCollisionsWithMap();
 		
-
-
 
 		map.tick();
 		player.tick();
 		
+
+		
 		// testing collisions
 		
-		// left
-		if(!map.moveableArea.contains(
-				player.position.x - player.outlineSize / 2,
-				player.position.y - player.outlineSize / 2)
-				&& !map.moveableArea.contains(
-						player.position.x - player.outlineSize / 2, 
-						(player.position.y - player.outlineSize / 2) + player.outlineSize)) {
-			player.velocity.x = 0;
-			collideLeft = true;
-		}
-		
-		else {
-			collideLeft = false;
-		}
-		
-		// right
-		if(!map.moveableArea.contains((player.position.x - player.outlineSize / 2) + player.outlineSize,
-				player.position.y - player.outlineSize / 2)
-				&& !map.moveableArea.contains((player.position.x - player.outlineSize / 2) + player.outlineSize,
-						(player.position.y - player.outlineSize / 2) + player.outlineSize)) {
-			player.velocity.x = 0;
-			collideRight = true;
-		}
-		
-		else {
-			collideRight = false;
-		}
-		
-		// up
-		if(!map.moveableArea.contains(
-				player.position.x - player.outlineSize / 2,
-				player.position.y - player.outlineSize / 2)
-				&& !map.moveableArea.contains(
-						(player.position.x - player.outlineSize / 2) + player.outlineSize, 
-						player.position.y - player.outlineSize / 2)) {
-			player.velocity.y = 0;
-			collideTop = true;
-		}
-		
-		else {
-			collideTop = false;
-		}
-		
-		// down
-		if(!map.moveableArea.contains(
-				player.position.x - player.outlineSize / 2,
-				(player.position.y - player.outlineSize / 2) + player.outlineSize)
-				&& !map.moveableArea.contains(
-						(player.position.x - player.outlineSize / 2) + player.outlineSize, 
-						(player.position.y - player.outlineSize / 2) + player.outlineSize)) {
-			player.velocity.y = 0;
-			collideBottom = true;
-		}
-		
-		else {
-			collideBottom = false;
-		}
 		
 		
 
