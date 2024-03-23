@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 import com.thehe.WHGRL.utils.Vector;
-import com.thehe.WHGRL.utils.Window;
 
 public class Tile {
 	

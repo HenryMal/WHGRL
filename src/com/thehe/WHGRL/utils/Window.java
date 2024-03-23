@@ -1,29 +1,23 @@
 package com.thehe.WHGRL.utils;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.*;
 import java.io.FileNotFoundException;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.swing.*;
 
 import com.thehe.WHGRL.Game;
-import com.thehe.WHGRL.entity.Obstacle;
-import com.thehe.WHGRL.entity.Player;
 import com.thehe.WHGRL.map.Map;
 import com.thehe.WHGRL.map.Tile;
-import com.thehe.WHGRL.map.TileType;
 
-public class Window implements Runnable, KeyListener {
+public class Window implements Runnable {
 	
 	public int width;
 	public int height;
 	
 	// window boilerplate
-	public JFrame window;
-	public Canvas canvas;
+	public static JFrame window;
+	public static Canvas canvas;
 	public BufferStrategy bufferStrategy;
 	
 	// long time
@@ -47,16 +41,7 @@ public class Window implements Runnable, KeyListener {
 	public Game game;
 
 	
-	// tests
-	Tile test;
-	Tile test2;
-	Player player;
-	Obstacle obstacle;
-	Map map;
-	
-	
 	public Window(Dimension screenSize) throws FileNotFoundException {
-		
 		
 		game = new Game();
 		
@@ -79,13 +64,13 @@ public class Window implements Runnable, KeyListener {
 		
 		canvas.setPreferredSize(new Dimension(width, height));
 		canvas.setSize(new Dimension(width, height));
-		canvas.addKeyListener(this);
 		canvas.setFocusable(true);
 		
 		window.add(canvas);
 		window.pack();
 		
 		window.setVisible(true);
+		window.setFocusable(true);
 		canvas.setVisible(true);
 		
 		window.setResizable(false);
@@ -93,11 +78,10 @@ public class Window implements Runnable, KeyListener {
 	
 		canvas.createBufferStrategy(2);
 		bufferStrategy = canvas.getBufferStrategy();
+	
+		
+		Input.init();
 
-		
-
-		
-		
 	}
 
 	@Override
@@ -143,7 +127,6 @@ public class Window implements Runnable, KeyListener {
 //				e.printStackTrace();
 //			}
 				
-			
 		}
 		
 	}
@@ -177,23 +160,7 @@ public class Window implements Runnable, KeyListener {
 		running = true;
 	}
 
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-
-	}
-
-
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-
-	}
 
 
 

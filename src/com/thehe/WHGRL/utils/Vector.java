@@ -20,6 +20,11 @@ public class Vector {
 		y = vector.y;
 	}
 	
+	public void setVector(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+	
 	public void addVector(Vector vector) {
 		x += vector.x;
 		y += vector.y;

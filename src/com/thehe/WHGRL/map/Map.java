@@ -3,7 +3,6 @@ package com.thehe.WHGRL.map;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
@@ -128,7 +127,6 @@ public class Map {
 		newObstacle.position.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2));
 		
 		newObstacle.phases.add(new Vector(newObstacle.position.x, newObstacle.position.y));
-		
 		
 		obstacles.add(newObstacle);
 		
