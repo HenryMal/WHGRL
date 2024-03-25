@@ -6,11 +6,11 @@ machine learning for the WHG but in java for fun
 add coins
 
 - level editor
-  -supports obstacle rotation around a point.
-  -supports checkpoints
-  -supports more precise object positioning
-  -supports coins
-  -supports delays between moving between phases
+  - supports obstacle rotation around a point.
+  - supports checkpoints
+  - supports more precise object positioning
+  - supports coins
+  - supports delays between moving between phases
 
 load next level (done)
 
