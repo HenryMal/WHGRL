@@ -110,7 +110,12 @@ public class Window implements Runnable {
 			tickTime = frameTime + tickTimeRemaining;
 			if(tickTime >= Time.NANOSECOND_PER_TICK) {
 				ticks++;
-				tick();
+				try {
+					tick();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				tickTime -= Time.NANOSECOND_PER_TICK;
 			}
 			
@@ -151,7 +156,7 @@ public class Window implements Runnable {
 		
 	}
 	
-	public void tick() {
+	public void tick() throws FileNotFoundException {
 		game.tick();
 	}
 	

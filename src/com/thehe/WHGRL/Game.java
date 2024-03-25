@@ -62,27 +62,23 @@ public class Game {
 
 	public void checkPlayerCollisionsWithMap() {
 		
-		player.collideLeft = (!map.moveableArea.contains(player.topLeft.x - player.movementSpeed, player.topLeft.y) || 
-				!map.moveableArea.contains(player.bottomLeft.x - player.movementSpeed, player.bottomLeft.y));
+		player.collideLeft = (!map.moveableArea.contains(player.hitbox.minX - player.movementSpeed, player.hitbox.minY) || 
+				!map.moveableArea.contains(player.hitbox.minX - player.movementSpeed, player.hitbox.maxY));
 		
-		player.collideRight = (!map.moveableArea.contains(player.topRight.x + player.movementSpeed, player.topRight.y) || 
-				!map.moveableArea.contains(player.bottomRight.x + player.movementSpeed, player.bottomRight.y));
+		player.collideRight = (!map.moveableArea.contains(player.hitbox.maxX + player.movementSpeed, player.hitbox.minY) || 
+				!map.moveableArea.contains(player.hitbox.maxX + player.movementSpeed, player.hitbox.maxY));
 		
-		player.collideTop = (!map.moveableArea.contains(player.topLeft.x, player.topLeft.y - player.movementSpeed) || 
-				!map.moveableArea.contains(player.topRight.x, player.topRight.y - player.movementSpeed));
+		player.collideTop = (!map.moveableArea.contains(player.hitbox.minX, player.hitbox.minY - player.movementSpeed) || 
+				!map.moveableArea.contains(player.hitbox.maxX, player.hitbox.minY - player.movementSpeed));
 		
-		player.collideBottom = (!map.moveableArea.contains(player.bottomLeft.x, player.bottomLeft.y + player.movementSpeed) || 
-				!map.moveableArea.contains(player.bottomRight.x, player.bottomRight.y + player.movementSpeed));
+		player.collideBottom = (!map.moveableArea.contains(player.hitbox.minX, player.hitbox.maxY + player.movementSpeed) || 
+				!map.moveableArea.contains(player.hitbox.maxX, player.hitbox.maxY + player.movementSpeed));
 		
 	}
 	
 	public void checkPlayerCollisionsWithObstacles() {
 		for(Obstacle obstacle : map.obstacles) {
-			hitPlayer = (
-					player.collides(obstacle.topLeft.x, obstacle.topLeft.y) ||
-					player.collides(obstacle.topRight.x, obstacle.topRight.y) ||
-					player.collides(obstacle.bottomLeft.x, obstacle.bottomLeft.y) ||
-					player.collides(obstacle.bottomRight.x, obstacle.bottomRight.y));
+			hitPlayer = player.collides(obstacle);
 			
 			if (hitPlayer) {
 				break;
@@ -98,11 +94,6 @@ public class Game {
 	    if(player.dead && player.opacity == 0) {
 	    	
 	    	respawnPlayer();
-	    	player.dead = false; 
-	    	player.opacity = 255; 
-
-
-	        
 	        
 	    }
 	}
@@ -113,11 +104,11 @@ public class Game {
 	
 	public void checkLevelFinished() {
 		
-		levelEnded = (
-				goalArea.contains(player.topLeft.x, player.topLeft.y) || 
-				goalArea.contains(player.topRight.x, player.topRight.y) || 
-				goalArea.contains(player.bottomLeft.x, player.bottomLeft.y) || 
-				goalArea.contains(player.bottomRight.x, player.bottomRight.y));
+		levelEnded = (player.collides(
+				goalArea.getMinX(),
+				goalArea.getMinY(),
+				goalArea.getMaxX(),
+				goalArea.getMaxY()));
 		
 	}
 	
@@ -129,7 +120,7 @@ public class Game {
 		
 	}
 	
-	public void tick() {
+	public void tick() throws FileNotFoundException {
 		
 		checkPlayerCollisionsWithMap();
 		checkPlayerCollisionsWithObstacles();
@@ -141,13 +132,11 @@ public class Game {
 
 
 		if(levelEnded) {
+			//map = new Map("maps/level_2.txt"); just a way to load in new maps
+			map = new Map("maps/level_2.txt");
 			respawnPlayer();
 		}
 		
-
-		
-
-
 
 	}
 	

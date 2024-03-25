@@ -16,7 +16,7 @@ import com.thehe.WHGRL.utils.Vector;
 
 public class Map {
 	
-	public static final int GRID_WIDTH = 22;
+	public static final int GRID_WIDTH = 24;
 	public static final int GRID_HEIGHT = 14;
 	
 	public List<Tile> backgroundTiles;
@@ -106,25 +106,29 @@ public class Map {
 	
 	public void createObstacles(String obstacleData) {
 		
-		Obstacle newObstacle = new Obstacle();
 		String[] obstaclePositions = obstacleData.split(",");
-		Vector newVector;
+
+		Vector position = new Vector(
+				Double.parseDouble(obstaclePositions[0]),
+				Double.parseDouble(obstaclePositions[1]));
 		
-		newObstacle.position.x = Integer.parseInt(obstaclePositions[0]);
-		newObstacle.position.y = Integer.parseInt(obstaclePositions[1]);
+		position.scaleVector(Tile.SIZE);
+		position.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2));
 		
-		newObstacle.velocity.x = Integer.parseInt(obstaclePositions[obstaclePositions.length - 2]);
-		newObstacle.velocity.y = Integer.parseInt(obstaclePositions[obstaclePositions.length - 1]);
+		Vector velocity = new Vector(
+				Double.parseDouble(obstaclePositions[obstaclePositions.length - 2]),
+				Double.parseDouble(obstaclePositions[obstaclePositions.length - 1]));
+		
+		Vector phase;
+		
+		Obstacle newObstacle = new Obstacle(position, velocity);
 		
 		for(int i = 2; i < obstaclePositions.length - 3; i++) {
-			newVector = new Vector(Integer.parseInt(obstaclePositions[i]), Integer.parseInt(obstaclePositions[++i]));
-			newVector.scaleVector(Tile.SIZE);
-			newVector.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2));
-			newObstacle.phases.add(newVector);
+			phase = new Vector(Double.parseDouble(obstaclePositions[i]), Double.parseDouble(obstaclePositions[++i]));
+			phase.scaleVector(Tile.SIZE);
+			phase.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2)); // offset it so it centers.
+			newObstacle.phases.add(phase);
 		}
-		
-		newObstacle.position.scaleVector(Tile.SIZE);
-		newObstacle.position.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2));
 		
 		newObstacle.phases.add(new Vector(newObstacle.position.x, newObstacle.position.y));
 		
@@ -167,9 +171,11 @@ public class Map {
 	}
 	
 	public void tick() {
+		
 		for(Obstacle obstacle : obstacles) {
 			obstacle.tick();
 		}
+
 	}
 	
 }
