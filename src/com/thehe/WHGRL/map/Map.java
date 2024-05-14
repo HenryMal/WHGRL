@@ -128,9 +128,15 @@ public class Map {
 			phase.scaleVector(Tile.SIZE);
 			phase.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2)); // offset it so it centers.
 			newObstacle.phases.add(phase);
+			System.out.println(phase.x);
 		}
 		
+		// so adding it after fixes the issues of it flying off screen immediately.
+		// initial position already counts as a phase.
+		// when an obstacle is initialized, we already passed the initial position phase
+		// which is why the new one comes first.
 		newObstacle.phases.add(new Vector(newObstacle.position.x, newObstacle.position.y));
+	
 		
 		obstacles.add(newObstacle);
 		

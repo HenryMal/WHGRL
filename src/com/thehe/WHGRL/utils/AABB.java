@@ -18,11 +18,8 @@ public class AABB {
 	
 	public boolean collides(AABB other) {
 		
-		return (other.minX <= maxX &&
-				other.minY <= maxY &&
-				other.maxX >= minX &&
-				other.maxY >= minY);
-		
+		return collides(other.minX, other.minY, other.maxX, other.maxY);
+
 	}
 	
 	public boolean collides(double minX, double minY, double maxX, double maxY) {

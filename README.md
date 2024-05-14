@@ -8,7 +8,6 @@ add coins
 - level editor
   - supports obstacle rotation around a point.
   - supports checkpoints
-  - supports more precise object positioning
   - supports coins
   - supports delays between moving between phases
 
