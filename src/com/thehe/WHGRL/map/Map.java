@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.thehe.WHGRL.entity.Coin;
 import com.thehe.WHGRL.entity.Obstacle;
 import com.thehe.WHGRL.utils.Vector;
 
@@ -24,8 +25,11 @@ public class Map {
 	public List<Tile> spawnTiles;
 	public List<Tile> goalTiles;
 	public List<Obstacle> obstacles;
+	public List<Coin> coins;
 	
 	public Area moveableArea;
+	
+	public String fileName;
 	
 	public Map(File file) throws FileNotFoundException {
 		backgroundTiles = new ArrayList<Tile>();
@@ -33,6 +37,7 @@ public class Map {
 		spawnTiles = new ArrayList<Tile>();
 		goalTiles = new ArrayList<Tile>();
 		obstacles = new ArrayList<Obstacle>();
+		coins = new ArrayList<Coin>();
 		
 		moveableArea = new Area();
 		
@@ -41,6 +46,7 @@ public class Map {
 	
 	public Map(String fileName) throws FileNotFoundException {
 		this(new File(fileName));
+		this.fileName = fileName;
 	}
 	
 	public void readMapFile(File file) throws FileNotFoundException {
@@ -48,7 +54,8 @@ public class Map {
 		Scanner scanner = new Scanner(file);
 		
 		String tileData = "";
-		String obstacleData = "";
+		String entityData = "";
+
 		
         for(int i = 0; i < GRID_HEIGHT; i++) {
             
@@ -60,11 +67,21 @@ public class Map {
             }
             
         }
-		
-		while(scanner.hasNext()) {
-			obstacleData = scanner.next();
-			createObstacles(obstacleData);
-		}
+        
+        while(scanner.hasNext()) {
+        	
+        	entityData = scanner.next();
+        	if(entityData.charAt(0) == 'O') {
+        		createObstacle(entityData);
+        	}
+        	
+        	if(entityData.charAt(0) == 'C') {
+        		createCoin(entityData);
+        	}
+
+        	
+        }
+
 		
 		scanner.close();
 		
@@ -104,13 +121,13 @@ public class Map {
 		}
 	}
 	
-	public void createObstacles(String obstacleData) {
+	public void createObstacle(String obstacleData) {
 		
 		String[] obstaclePositions = obstacleData.split(",");
 
 		Vector position = new Vector(
-				Double.parseDouble(obstaclePositions[0]),
-				Double.parseDouble(obstaclePositions[1]));
+				Double.parseDouble(obstaclePositions[1]),
+				Double.parseDouble(obstaclePositions[2]));
 		
 		position.scaleVector(Tile.SIZE);
 		position.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2));
@@ -123,12 +140,11 @@ public class Map {
 		
 		Obstacle newObstacle = new Obstacle(position, velocity);
 		
-		for(int i = 2; i < obstaclePositions.length - 3; i++) {
+		for(int i = 3; i < obstaclePositions.length - 3; i++) {
 			phase = new Vector(Double.parseDouble(obstaclePositions[i]), Double.parseDouble(obstaclePositions[++i]));
 			phase.scaleVector(Tile.SIZE);
 			phase.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2)); // offset it so it centers.
 			newObstacle.phases.add(phase);
-			System.out.println(phase.x);
 		}
 		
 		// so adding it after fixes the issues of it flying off screen immediately.
@@ -140,6 +156,23 @@ public class Map {
 		
 		obstacles.add(newObstacle);
 		
+		
+	}
+	
+	public void createCoin(String coinData) {
+		
+		String[] coinPositions = coinData.split(",");
+		
+		Vector position = new Vector(
+				Double.parseDouble(coinPositions[1]),
+				Double.parseDouble(coinPositions[2]));
+		
+		position.scaleVector(Tile.SIZE);
+		position.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2));
+		
+		Coin newCoin = new Coin(position);
+		
+		coins.add(newCoin);
 		
 	}
 	
@@ -168,11 +201,13 @@ public class Map {
 			obstacle.render(graphics2D);
 		}
 		
+		for(Coin coin : coins) {
+			coin.render(graphics2D);
+		}
+		
 		graphics2D.setColor(Color.BLACK);
 		graphics2D.setStroke(new BasicStroke(4));
 		graphics2D.draw(moveableArea);
-		
-
 		
 	}
 	

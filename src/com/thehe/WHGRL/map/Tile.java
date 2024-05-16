@@ -24,7 +24,7 @@ public class Tile {
 		this.position = new Vector(positionY * SIZE, positionX * SIZE);
 		this.tileType = tileType;
 		setTileColor(positionX, positionY);
-		
+		body = new Rectangle2D.Double(position.x, position.y, SIZE, SIZE);
 		
 	}
 	
@@ -56,7 +56,7 @@ public class Tile {
 		
 		graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		body = new Rectangle2D.Double(position.x, position.y, SIZE, SIZE);
+
 		
 		graphics2D.setColor(tileColor);
 		graphics2D.fill(body);

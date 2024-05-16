@@ -18,6 +18,10 @@ public class AABB {
 	
 	public boolean collides(AABB other) {
 		
+		if(other == null) {
+			return false;
+		}
+		
 		return collides(other.minX, other.minY, other.maxX, other.maxY);
 
 	}

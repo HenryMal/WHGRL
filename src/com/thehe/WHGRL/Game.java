@@ -1,10 +1,12 @@
 package com.thehe.WHGRL;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.io.FileNotFoundException;
 
+import com.thehe.WHGRL.entity.Coin;
 import com.thehe.WHGRL.entity.Obstacle;
 import com.thehe.WHGRL.entity.Player;
 import com.thehe.WHGRL.map.Map;
@@ -20,16 +22,16 @@ public class Game {
 	public Rectangle2D goalArea;
 	
 	public boolean levelEnded;
-	public boolean hitPlayer;
+	public int coinsCollected;
+
 	
 	public Game() throws FileNotFoundException {
 		
-		map = new Map("maps/level_1.txt");
+		map = new Map("maps/level_2.txt");
 		
 		spawnPlayer();
 		setUpGoalArea();
 
-		hitPlayer = false;
 
 	}
 	
@@ -78,22 +80,30 @@ public class Game {
 	
 	public void checkPlayerCollisionsWithObstacles() {
 		for(Obstacle obstacle : map.obstacles) {
-			hitPlayer = player.collides(obstacle);
 			
-			if (hitPlayer) {
+			if (player.collides(obstacle)) {
+				player.dead = true;
+				break;
+			}
+		}
+	}
+	
+	public void checkPlayerCollisionsWithCoins() {
+		for(Coin coin : map.coins) {
+			if (player.collides(coin)) {
+				coin.destroy();
+				coinsCollected++;
 				break;
 			}
 		}
 	}
 	
 	public void handlePlayerDeath() {
-	    if(hitPlayer && !player.dead) {
-	        player.dead = true; 
-	    }
 
 	    if(player.dead && player.opacity == 0) {
 	    	
 	    	respawnPlayer();
+	    	respawnCoins();
 	        
 	    }
 	}
@@ -102,13 +112,20 @@ public class Game {
 		player = new Player(spawnAreaStart);
 	}
 	
+	public void respawnCoins() {
+		coinsCollected = 0;
+		for(Coin coin : map.coins) {
+			coin.recreateCoin();
+		}
+	}
+	
 	public void checkLevelFinished() {
 		
 		levelEnded = (player.collides(
 				goalArea.getMinX(),
 				goalArea.getMinY(),
 				goalArea.getMaxX(),
-				goalArea.getMaxY()));
+				goalArea.getMaxY()) && coinsCollected == map.coins.size());
 		
 	}
 	
@@ -124,6 +141,7 @@ public class Game {
 		
 		checkPlayerCollisionsWithMap();
 		checkPlayerCollisionsWithObstacles();
+		checkPlayerCollisionsWithCoins();
 		handlePlayerDeath();
 		checkLevelFinished();
 
@@ -132,9 +150,10 @@ public class Game {
 
 
 		if(levelEnded) {
-			//map = new Map("maps/level_2.txt"); just a way to load in new maps
+
 			map = new Map("maps/level_2.txt");
 			respawnPlayer();
+			coinsCollected = 0;
 		}
 		
 
