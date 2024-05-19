@@ -15,9 +15,13 @@ public class Vector {
 		this.y = y;
 	}
 	
+	public Vector(Vector vector) {
+		this.setVector(vector);
+	}
+	
 	public void setVector(Vector vector) {
-		x = vector.x;
-		y = vector.y;
+		this.x = vector.x;
+		this.y = vector.y;
 	}
 	
 	public void setVector(double x, double y) {
@@ -26,18 +30,28 @@ public class Vector {
 	}
 	
 	public void addVector(Vector vector) {
-		x += vector.x;
-		y += vector.y;
+		this.x += vector.x;
+		this.y += vector.y;
+	}
+	
+	public void addVector(double x, double y) {
+		this.x += x;
+		this.y += y;
 	}
 	
 	public void subtractVector(Vector vector) {
-		x -= vector.x;
-		y -= vector.y;
+		this.x -= vector.x;
+		this.y -= vector.y;
+	}
+	
+	public void subtractVector(double x, double y) {
+		this.x -= x;
+		this.y -= y;
 	}
 	
 	public void scaleVector(double scalar) {
-		x *= scalar;
-		y *= scalar;
+		this.x *= scalar;
+		this.y *= scalar;
 	}
 	
 	public boolean equals(Vector vector) {

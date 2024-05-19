@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 
 import com.thehe.WHGRL.entity.Coin;
 import com.thehe.WHGRL.entity.Obstacle;
+import com.thehe.WHGRL.utils.Phase;
 import com.thehe.WHGRL.utils.Vector;
 
 public class Map {
@@ -26,10 +28,10 @@ public class Map {
 	public List<Tile> goalTiles;
 	public List<Obstacle> obstacles;
 	public List<Coin> coins;
+
+	public List<Rectangle2D> savePoints;
 	
 	public Area moveableArea;
-	
-	public String fileName;
 	
 	public Map(File file) throws FileNotFoundException {
 		backgroundTiles = new ArrayList<Tile>();
@@ -39,6 +41,8 @@ public class Map {
 		obstacles = new ArrayList<Obstacle>();
 		coins = new ArrayList<Coin>();
 		
+		savePoints = new ArrayList<Rectangle2D>();
+		
 		moveableArea = new Area();
 		
 		readMapFile(file);
@@ -46,7 +50,6 @@ public class Map {
 	
 	public Map(String fileName) throws FileNotFoundException {
 		this(new File(fileName));
-		this.fileName = fileName;
 	}
 	
 	public void readMapFile(File file) throws FileNotFoundException {
@@ -77,6 +80,11 @@ public class Map {
         	
         	if(entityData.charAt(0) == 'C') {
         		createCoin(entityData);
+        	}
+        	
+        	
+        	if(entityData.charAt(0) == 'S') {
+        		createSavePoint(entityData);
         	}
 
         	
@@ -124,37 +132,28 @@ public class Map {
 	public void createObstacle(String obstacleData) {
 		
 		String[] obstaclePositions = obstacleData.split(",");
+		List<Phase> phases = new ArrayList<Phase>();
+		
+		Phase initialPhase = new Phase(
+				new Vector(Double.parseDouble(obstaclePositions[1]), Double.parseDouble(obstaclePositions[2])),
+				new Vector(Double.parseDouble(obstaclePositions[3]), Double.parseDouble(obstaclePositions[4])));
 
-		Vector position = new Vector(
-				Double.parseDouble(obstaclePositions[1]),
-				Double.parseDouble(obstaclePositions[2]));
+		Phase phase;
 		
-		position.scaleVector(Tile.SIZE);
-		position.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2));
-		
-		Vector velocity = new Vector(
-				Double.parseDouble(obstaclePositions[obstaclePositions.length - 2]),
-				Double.parseDouble(obstaclePositions[obstaclePositions.length - 1]));
-		
-		Vector phase;
-		
-		Obstacle newObstacle = new Obstacle(position, velocity);
-		
-		for(int i = 3; i < obstaclePositions.length - 3; i++) {
-			phase = new Vector(Double.parseDouble(obstaclePositions[i]), Double.parseDouble(obstaclePositions[++i]));
-			phase.scaleVector(Tile.SIZE);
-			phase.subtractVector(new Vector(Tile.SIZE / 2, Tile.SIZE / 2)); // offset it so it centers.
-			newObstacle.phases.add(phase);
+		for(int i = 5; i < obstaclePositions.length - 1; i = i + 4) {
+
+			phase = new Phase(
+					new Vector(Double.parseDouble(obstaclePositions[i]), Double.parseDouble(obstaclePositions[i + 1])),
+					new Vector(Double.parseDouble(obstaclePositions[i + 2]), Double.parseDouble(obstaclePositions[i + 3]))
+			);
+
+			phases.add(phase);
 		}
 		
-		// so adding it after fixes the issues of it flying off screen immediately.
-		// initial position already counts as a phase.
-		// when an obstacle is initialized, we already passed the initial position phase
-		// which is why the new one comes first.
-		newObstacle.phases.add(new Vector(newObstacle.position.x, newObstacle.position.y));
+		phases.add(initialPhase);
 	
-		
-		obstacles.add(newObstacle);
+		Obstacle obstacle = new Obstacle(initialPhase.position, initialPhase.velocity, phases);
+		obstacles.add(obstacle);
 		
 		
 	}
@@ -173,6 +172,20 @@ public class Map {
 		Coin newCoin = new Coin(position);
 		
 		coins.add(newCoin);
+		
+	}
+	
+	public void createSavePoint(String savePointData) {
+		
+		String[] savePointPosition = savePointData.split(",");
+		
+		Rectangle2D shit = new Rectangle2D.Double(
+				Tile.SIZE * Double.parseDouble(savePointPosition[1]), 
+				Tile.SIZE * Double.parseDouble(savePointPosition[2]), 
+				Tile.SIZE * Double.parseDouble(savePointPosition[3]), 
+				Tile.SIZE * Double.parseDouble(savePointPosition[4]));
+		
+		savePoints.add(shit);
 		
 	}
 	
@@ -203,6 +216,11 @@ public class Map {
 		
 		for(Coin coin : coins) {
 			coin.render(graphics2D);
+		}
+		
+		for (Rectangle2D savePoint: savePoints) {
+			graphics2D.setColor(new Color(188, 255, 183));
+			graphics2D.fill(savePoint);
 		}
 		
 		graphics2D.setColor(Color.BLACK);

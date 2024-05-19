@@ -6,20 +6,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thehe.WHGRL.utils.MathUtils;
+import com.thehe.WHGRL.utils.Phase;
 import com.thehe.WHGRL.utils.Vector;
 
 public class Obstacle extends Entity {
 	
-	public List<Vector> phases;
+	public List<Phase> phases;
+	
 	public int phasesIndex;
 	public int clampIndex;
 	
-	public Obstacle(Vector position, Vector velocity) {
+	public Obstacle(Vector position, Vector velocity, List<Phase> phases) {
 		super(position, velocity, 0.25, 0.5);
 		
-		phases = new ArrayList<Vector>();
+		this.phases = phases;
+		
 		phasesIndex = 0;
-		clampIndex = 0;
+		clampIndex = phases.size() - 1;
 		
 		body = new Ellipse2D.Double();
 
@@ -34,29 +37,27 @@ public class Obstacle extends Entity {
 	
 	public void tick() {
 
-		if (position.equals(phases.get((phasesIndex)))) {
-			
+		if ((phases.get(phasesIndex).positionEquals(position))) {
+
+			velocity.setVector(phases.get(phasesIndex).velocity);
 			phasesIndex = (phasesIndex + 1) % phases.size();
-			velocity.scaleVector(-1);
+			clampIndex = (clampIndex + 1) % phases.size();
 
 		}
 
 		position.addVector(velocity);
-		clampIndex = (phasesIndex / 2) * 2;  // division by 2 so we can group phases by 2. so like 0, 1 or 2, 3
-		
 		
 		position.x = MathUtils.clamp(
-				Math.min(phases.get(clampIndex).x, phases.get(((1 + clampIndex)) % phases.size()).x),
-				Math.max(phases.get(clampIndex).x, phases.get(((1 + clampIndex)) % phases.size()).x),
+				Math.min(phases.get(clampIndex).position.x, phases.get(((1 + clampIndex)) % phases.size()).position.x),
+				Math.max(phases.get(clampIndex).position.x, phases.get(((1 + clampIndex)) % phases.size()).position.x),
 				position.x
 		);
 		
 		position.y = MathUtils.clamp(
-				Math.min(phases.get(clampIndex).y, phases.get(((1 + clampIndex)) % phases.size()).y),
-				Math.max(phases.get(clampIndex).y, phases.get(((1 + clampIndex)) % phases.size()).y),
+				Math.min(phases.get(clampIndex).position.y, phases.get(((1 + clampIndex)) % phases.size()).position.y),
+				Math.max(phases.get(clampIndex).position.y, phases.get(((1 + clampIndex)) % phases.size()).position.y),
 				position.y
 		);
-
 		
 		super.tick();
 

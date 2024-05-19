@@ -27,30 +27,43 @@ public class Game {
 	
 	public Game() throws FileNotFoundException {
 		
-		map = new Map("maps/level_2.txt");
+		map = new Map("maps/level_4.txt");
 		
 		spawnPlayer();
 		setUpGoalArea();
+		
+
 
 
 	}
 	
 	public void spawnPlayer() {
+		
+		calculateSpawnPosition(map.goalTiles.get(0).position, map.goalTiles.get(map.goalTiles.size() - 1).position);
 
-		spawnAreaStart = new Vector(
-				map.spawnTiles.get(0).position.x,
-				map.spawnTiles.get(0).position.y);
-		
-		Vector spawnAreaEnd = new Vector(
-				map.spawnTiles.get(map.spawnTiles.size() - 1).position.x + Tile.SIZE,
-				map.spawnTiles.get(map.spawnTiles.size() - 1).position.y + Tile.SIZE);
-		
-		spawnAreaStart.addVector(spawnAreaEnd);
-		spawnAreaStart.scaleVector(0.5);
+		// meaning it doesnt exist, use the end area
+		if(map.spawnTiles.size() != 0) {
+			calculateSpawnPosition(map.spawnTiles.get(0).position, map.spawnTiles.get(map.spawnTiles.size() - 1).position);
+			
+		}
 		
 		respawnPlayer();
 
 	}
+	
+	public void calculateSpawnPosition(Vector vectorOne, Vector vectorTwo) {
+		
+		spawnAreaStart = new Vector(vectorOne);
+		Vector spawnAreaEnd = new Vector(vectorTwo);
+	
+		spawnAreaEnd.addVector(Tile.SIZE, Tile.SIZE);
+		
+		spawnAreaStart.addVector(spawnAreaEnd);
+		spawnAreaStart.scaleVector(0.5);
+				
+		
+	}
+
 	
 	public void setUpGoalArea() {
 		
@@ -93,6 +106,16 @@ public class Game {
 			if (player.collides(coin)) {
 				coin.destroy();
 				coinsCollected++;
+				break;
+			}
+		}
+	}
+	
+	public void checkPlayerCollisionsSavePoint() {
+		for(Rectangle2D savePoint : map.savePoints) {
+			
+			if (player.collides(savePoint.getX(), savePoint.getY(), savePoint.getX() + savePoint.getWidth(), savePoint.getY() + savePoint.getHeight())) {
+				spawnAreaStart.setVector(savePoint.getCenterX(), savePoint.getCenterY());
 				break;
 			}
 		}
@@ -142,6 +165,7 @@ public class Game {
 		checkPlayerCollisionsWithMap();
 		checkPlayerCollisionsWithObstacles();
 		checkPlayerCollisionsWithCoins();
+		checkPlayerCollisionsSavePoint();
 		handlePlayerDeath();
 		checkLevelFinished();
 
@@ -151,8 +175,9 @@ public class Game {
 
 		if(levelEnded) {
 
-			map = new Map("maps/level_2.txt");
-			respawnPlayer();
+			map = new Map("maps/level_4.txt");
+			spawnPlayer();
+			setUpGoalArea();
 			coinsCollected = 0;
 		}
 		
