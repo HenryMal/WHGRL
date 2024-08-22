@@ -2,12 +2,9 @@ package com.thehe.WHGRL.entity.obstacles;
 
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.thehe.WHGRL.entity.Entity;
-import com.thehe.WHGRL.utils.MathUtils;
-import com.thehe.WHGRL.utils.Time;
 import com.thehe.WHGRL.utils.Vector;
 import com.thehe.WHGRL.utils.phases.Phase;
 
@@ -41,19 +38,6 @@ public class Obstacle extends Entity {
 	
 	public void tick() {
 		
-		
-//		
-//		if(!phases.get(phasesIndex).isCoordinateOfRotationEmpty()) {
-//			
-//			position.x = phases.get(phasesIndex).coordinateOfRotation.x + phases.get(phasesIndex).radius * Math.cos(phases.get(phasesIndex).angle);
-//			position.y = phases.get(phasesIndex).coordinateOfRotation.y + phases.get(phasesIndex).radius * Math.sin(phases.get(phasesIndex).angle);
-//			phases.get(phasesIndex).angle += phases.get(phasesIndex).angleVelocity;
-//			
-//		}
-//
-//		tick++;
-
-
 		super.tick();
 
 	}

@@ -23,7 +23,7 @@ import com.thehe.WHGRL.utils.phases.Phase;
 
 public class Map {
 	
-	public static final int GRID_WIDTH = 24;
+	public static final int GRID_WIDTH = 22;
 	public static final int GRID_HEIGHT = 14;
 	
 	public List<Tile> backgroundTiles;
@@ -248,11 +248,7 @@ public class Map {
 		for(Tile tile : goalTiles) {
 			tile.render(graphics2D);
 		}
-		
-		for(Obstacle obstacle : obstacles) {
-			obstacle.render(graphics2D);
-		}
-		
+
 		for(Coin coin : coins) {
 			coin.render(graphics2D);
 		}
@@ -265,6 +261,12 @@ public class Map {
 		graphics2D.setColor(Color.BLACK);
 		graphics2D.setStroke(new BasicStroke(4));
 		graphics2D.draw(moveableArea);
+		
+		
+		for(Obstacle obstacle : obstacles) {
+			obstacle.render(graphics2D);
+		}
+		
 		
 	}
 	

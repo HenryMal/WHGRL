@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.util.List;
 
 import com.thehe.WHGRL.utils.MathUtils;
+import com.thehe.WHGRL.utils.Time;
 import com.thehe.WHGRL.utils.Vector;
 import com.thehe.WHGRL.utils.phases.Phase;
 
@@ -20,7 +21,7 @@ public class StandardObstacle extends Obstacle {
 	
 	public void tick() {
 		
-		if ((phases.get(phasesIndex).positionEquals(position)) && tick >= phases.get(phasesIndex).delay * 60) {
+		if ((phases.get(phasesIndex).positionEquals(position)) && tick >= phases.get(phasesIndex).delay * Time.TPS) {
 
 			velocity.setVector(phases.get(phasesIndex).velocity);
 			phasesIndex = (phasesIndex + 1) % phases.size();

@@ -22,10 +22,19 @@ public class RotationalObstacle extends Obstacle {
 		this.pointOfRotation = new Vector(pointOfRotation);
 		
 		this.radius = MathUtils.distance(this.pointOfRotation, this.position);
-		this.angle = Math.atan(position.y / position.x);
+		this.angle = calculateAngle();
 		
-		this.angleSpeed = phases.get(phasesIndex).angleSpeed;
 
+		this.angleSpeed = phases.get(phasesIndex).angleSpeed;
+		
+
+	}
+	
+	public double calculateAngle() {
+		double xDifference = position.x - pointOfRotation.x;
+		double yDifference = position.y - pointOfRotation.y;
+		
+		return Math.atan2(yDifference, xDifference);
 	}
 	
 	@Override
@@ -66,6 +75,8 @@ public class RotationalObstacle extends Obstacle {
 		duration++;
 		
 		super.tick();
+		
+		
 	}
 
 }

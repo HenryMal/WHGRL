@@ -55,9 +55,6 @@ public class Tile {
 	public void render(Graphics2D graphics2D) {
 		
 		graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
-
-		
 		graphics2D.setColor(tileColor);
 		graphics2D.fill(body);
 		

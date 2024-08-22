@@ -143,7 +143,6 @@ public class Window implements Runnable {
 		graphics2D.setColor(Color.WHITE);
 		graphics2D.fillRect(0, 0, width, height);
 		
-
 		game.render(graphics2D);
 		
 		graphics2D.dispose();

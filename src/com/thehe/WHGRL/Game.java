@@ -1,10 +1,13 @@
 package com.thehe.WHGRL;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import com.thehe.WHGRL.entity.Coin;
 import com.thehe.WHGRL.entity.Player;
@@ -14,6 +17,8 @@ import com.thehe.WHGRL.map.Tile;
 import com.thehe.WHGRL.utils.Vector;
 
 public class Game {
+	
+	public final static String LEVELS_TO_PLAY = "maps/levels.txt";
 
 	public Map map;
 	public Player player;
@@ -21,17 +26,36 @@ public class Game {
 	
 	public Rectangle2D goalArea;
 	
+	public List<String> levels;
+	
 	public boolean levelEnded;
 	public int coinsCollected;
+	public int levelsProgressed;
 
 	
 	public Game() throws FileNotFoundException {
 		
-		map = new Map("maps/level_7.txt");
+		readLevels();
+		
+		map = new Map(levels.get(levelsProgressed));
 		
 		spawnPlayer();
 		setUpGoalArea();
 	
+	}
+	
+	public void readLevels() throws FileNotFoundException {
+		
+		levels = new ArrayList<String>();
+		levelsProgressed = 0;
+		
+		Scanner scanner = new Scanner(new File(LEVELS_TO_PLAY));
+		
+		while(scanner.hasNext()) {
+			levels.add("maps/" + scanner.next() + ".txt");
+		}
+		
+		scanner.close();
 	}
 	
 	public void spawnPlayer() {
@@ -90,7 +114,6 @@ public class Game {
 	
 	public void checkPlayerCollisionsWithObstacles() {
 		for(Obstacle obstacle : map.obstacles) {
-			
 			if (player.collides(obstacle)) {
 				player.dead = true;
 				break;
@@ -171,11 +194,19 @@ public class Game {
 
 
 		if(levelEnded) {
+			
+			if (levelsProgressed == levels.size() - 1) {
+				System.out.println("you finished");
+				System.exit(0);
+			}
 
-			map = new Map("maps/level_1.txt");
+			levelsProgressed += 1;
+			map = new Map(levels.get(levelsProgressed));
 			spawnPlayer();
 			setUpGoalArea();
 			coinsCollected = 0;
+			
+			
 		}
 		
 

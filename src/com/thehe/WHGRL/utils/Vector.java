@@ -11,8 +11,7 @@ public class Vector {
 	}
 	
 	public Vector(double x, double y) {
-		this.x = x;
-		this.y = y;
+		this.setVector(x, y);
 	}
 	
 	public Vector(Vector vector) {
@@ -20,8 +19,7 @@ public class Vector {
 	}
 	
 	public void setVector(Vector vector) {
-		this.x = vector.x;
-		this.y = vector.y;
+		this.setVector(vector.x, vector.y);
 	}
 	
 	public void setVector(double x, double y) {
@@ -30,8 +28,7 @@ public class Vector {
 	}
 	
 	public void addVector(Vector vector) {
-		this.x += vector.x;
-		this.y += vector.y;
+		this.addVector(vector.x, vector.y);
 	}
 	
 	public void addVector(double x, double y) {
@@ -40,8 +37,7 @@ public class Vector {
 	}
 	
 	public void subtractVector(Vector vector) {
-		this.x -= vector.x;
-		this.y -= vector.y;
+		this.subtractVector(vector.x, vector.y);
 	}
 	
 	public void subtractVector(double x, double y) {
