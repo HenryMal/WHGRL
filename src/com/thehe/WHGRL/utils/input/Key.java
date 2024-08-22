@@ -1,4 +1,4 @@
-package com.thehe.WHGRL.utils;
+package com.thehe.WHGRL.utils.input;
 
 public class Key {
 	

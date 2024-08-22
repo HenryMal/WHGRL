@@ -9,6 +9,7 @@ import javax.swing.*;
 import com.thehe.WHGRL.Game;
 import com.thehe.WHGRL.map.Map;
 import com.thehe.WHGRL.map.Tile;
+import com.thehe.WHGRL.utils.input.Input;
 
 public class Window implements Runnable {
 	

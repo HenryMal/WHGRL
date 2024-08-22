@@ -15,5 +15,9 @@ public class MathUtils {
 		return value;
 		
 	}
+	
+	public static double distance(Vector vectorOne, Vector vectorTwo) {
+		return Math.sqrt((vectorTwo.x - vectorOne.x) * (vectorTwo.x - vectorOne.x) + (vectorTwo.y - vectorOne.y) * (vectorTwo.y - vectorOne.y));
+	}
 
 }

@@ -29,6 +29,7 @@ public class Entity {
 	
 	public double opacity;
 	
+	
 	public Entity(Vector position, Vector velocity, double sizeScale, double outlineScale) {
 		
 		this.position = new Vector(position.x, position.y);
@@ -40,9 +41,8 @@ public class Entity {
 		opacity = 255;
 		outlineColor = new Color(0, 0, 0, (int) opacity);
 		
-		calculateAABB();
 		calculateOffsets();
-		
+		calculateAABB();
 	}
 	
 	public void calculateOffsets() {
@@ -71,7 +71,7 @@ public class Entity {
 	public void render(Graphics2D graphics2D) {
 		
 		graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
+
 		body.setFrame(position.x - outlineOffset, position.y - outlineOffset, outlineSize, outlineSize);
 		
 		graphics2D.setColor(outlineColor);

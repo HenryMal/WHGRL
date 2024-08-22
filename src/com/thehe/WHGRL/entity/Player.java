@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-import com.thehe.WHGRL.utils.Input;
 import com.thehe.WHGRL.utils.Vector;
+import com.thehe.WHGRL.utils.input.Input;
 
 public class Player extends Entity {
 	

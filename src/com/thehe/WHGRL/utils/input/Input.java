@@ -1,7 +1,9 @@
-package com.thehe.WHGRL.utils;
+package com.thehe.WHGRL.utils.input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import com.thehe.WHGRL.utils.Window;
 
 public class Input {
 	

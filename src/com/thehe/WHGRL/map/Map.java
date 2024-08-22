@@ -13,9 +13,13 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.thehe.WHGRL.entity.Coin;
-import com.thehe.WHGRL.entity.Obstacle;
-import com.thehe.WHGRL.utils.Phase;
+import com.thehe.WHGRL.entity.obstacles.Obstacle;
+import com.thehe.WHGRL.entity.obstacles.RotationalObstacle;
+import com.thehe.WHGRL.entity.obstacles.StandardObstacle;
 import com.thehe.WHGRL.utils.Vector;
+import com.thehe.WHGRL.utils.phases.ORPhase;
+import com.thehe.WHGRL.utils.phases.OSPhase;
+import com.thehe.WHGRL.utils.phases.Phase;
 
 public class Map {
 	
@@ -74,20 +78,21 @@ public class Map {
         while(scanner.hasNext()) {
         	
         	entityData = scanner.next();
-        	if(entityData.charAt(0) == 'O') {
-        		createObstacle(entityData);
-        	}
-        	
-        	if(entityData.charAt(0) == 'C') {
-        		createCoin(entityData);
-        	}
-        	
-        	
-        	if(entityData.charAt(0) == 'S') {
-        		createSavePoint(entityData);
-        	}
 
-        	
+        	switch(entityData.substring(0, 2)) {
+        		case "OR": 
+        			createORObstacle(entityData);
+        			break;
+        		case "OS":
+        			createOSObstacle(entityData);
+        			break;
+        		case "C,":
+        			createCoin(entityData);
+        			break;
+        		case "S,":
+        			createSavePoint(entityData);
+        			break;
+        	}
         }
 
 		
@@ -129,22 +134,57 @@ public class Map {
 		}
 	}
 	
-	public void createObstacle(String obstacleData) {
+	public void createORObstacle(String obstacleData) {
 		
 		String[] obstaclePositions = obstacleData.split(",");
 		List<Phase> phases = new ArrayList<Phase>();
 		
-		Phase initialPhase = new Phase(
+		Vector obstaclePosition = new Vector(Double.parseDouble(obstaclePositions[1]), Double.parseDouble(obstaclePositions[2]));
+		Vector obstaclePointOfRotation = new Vector(Double.parseDouble(obstaclePositions[3]), Double.parseDouble(obstaclePositions[4]));
+		
+		obstaclePosition.scaleVector(Tile.SIZE);
+		obstaclePosition.subtractVector(Tile.SIZE / 2, Tile.SIZE / 2);
+		
+		obstaclePointOfRotation.scaleVector(Tile.SIZE);
+		obstaclePointOfRotation.subtractVector(Tile.SIZE / 2, Tile.SIZE / 2);
+		
+		Phase phase;
+		
+		for(int i = 5; i < obstaclePositions.length; i = i + 3) {
+			
+			phase = new ORPhase(
+					Double.parseDouble(obstaclePositions[i]),
+					Double.parseDouble(obstaclePositions[i + 1]),
+					Integer.parseInt(obstaclePositions[i + 2])
+			);
+			
+			phases.add(phase);
+		}
+		
+		Obstacle obstacle = new RotationalObstacle(obstaclePosition, obstaclePointOfRotation, phases);
+		obstacles.add(obstacle);
+		
+	}
+	
+	public void createOSObstacle(String obstacleData) {
+		
+		String[] obstaclePositions = obstacleData.split(",");
+		List<Phase> phases = new ArrayList<Phase>();
+		
+		OSPhase initialPhase = new OSPhase(
 				new Vector(Double.parseDouble(obstaclePositions[1]), Double.parseDouble(obstaclePositions[2])),
-				new Vector(Double.parseDouble(obstaclePositions[3]), Double.parseDouble(obstaclePositions[4])));
+				new Vector(Double.parseDouble(obstaclePositions[3]), Double.parseDouble(obstaclePositions[4])),
+				Integer.parseInt(obstaclePositions[5])
+		);
 
 		Phase phase;
 		
-		for(int i = 5; i < obstaclePositions.length - 1; i = i + 4) {
+		for(int i = 6; i < obstaclePositions.length - 1; i = i + 5) {
 
-			phase = new Phase(
+			phase = new OSPhase(
 					new Vector(Double.parseDouble(obstaclePositions[i]), Double.parseDouble(obstaclePositions[i + 1])),
-					new Vector(Double.parseDouble(obstaclePositions[i + 2]), Double.parseDouble(obstaclePositions[i + 3]))
+					new Vector(Double.parseDouble(obstaclePositions[i + 2]), Double.parseDouble(obstaclePositions[i + 3])),
+					Integer.parseInt(obstaclePositions[i + 4])
 			);
 
 			phases.add(phase);
@@ -152,9 +192,8 @@ public class Map {
 		
 		phases.add(initialPhase);
 	
-		Obstacle obstacle = new Obstacle(initialPhase.position, initialPhase.velocity, phases);
+		Obstacle obstacle = new StandardObstacle(initialPhase.position, initialPhase.velocity, phases);
 		obstacles.add(obstacle);
-		
 		
 	}
 	

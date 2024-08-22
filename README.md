@@ -3,19 +3,14 @@ machine learning for the WHG but in java for fun
 
 # TODO:
 
-add coins
+level editor
 
-- level editor
-  - supports obstacle rotation around a point.
-  - supports checkpoints (will do)
-  - supports having only having 1 green area to act as start/end (will do)
-  - supports delays between moving between phases
-  - supports more phases for moving (will do)
+# NOTES
 
-load next level (done)
+we are basically done. took long enough. we just need to refactor code and do some improvements cuz code is ugly as fuck right now.
 
-make option to pick any level.
+# ENDING
 
-RL 
+migrate this to a gym environment and then use bryans code to make this work. im so ready
 
 

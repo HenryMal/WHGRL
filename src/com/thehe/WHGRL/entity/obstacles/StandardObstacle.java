@@ -1,33 +1,16 @@
-package com.thehe.WHGRL.entity;
+package com.thehe.WHGRL.entity.obstacles;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.ArrayList;
+import java.awt.Graphics2D;
 import java.util.List;
 
 import com.thehe.WHGRL.utils.MathUtils;
-import com.thehe.WHGRL.utils.Phase;
 import com.thehe.WHGRL.utils.Vector;
+import com.thehe.WHGRL.utils.phases.Phase;
 
-public class Obstacle extends Entity {
-	
-	public List<Phase> phases;
-	
-	public int phasesIndex;
-	public int clampIndex;
-	
-	public Obstacle(Vector position, Vector velocity, List<Phase> phases) {
-		super(position, velocity, 0.25, 0.5);
-		
-		this.phases = phases;
-		
-		phasesIndex = 0;
-		clampIndex = phases.size() - 1;
-		
-		body = new Ellipse2D.Double();
+public class StandardObstacle extends Obstacle {
 
-		entityColor = new Color(0, 0, 255, (int) opacity);
-	
+	public StandardObstacle(Vector position, Vector velocity, List<Phase> phases) {
+		super(position, velocity, phases);
 	}
 	
 	@Override
@@ -36,13 +19,14 @@ public class Obstacle extends Entity {
 	}
 	
 	public void tick() {
-
-		if ((phases.get(phasesIndex).positionEquals(position))) {
+		
+		if ((phases.get(phasesIndex).positionEquals(position)) && tick >= phases.get(phasesIndex).delay * 60) {
 
 			velocity.setVector(phases.get(phasesIndex).velocity);
 			phasesIndex = (phasesIndex + 1) % phases.size();
 			clampIndex = (clampIndex + 1) % phases.size();
-
+			tick = 0;
+			
 		}
 
 		position.addVector(velocity);
@@ -59,8 +43,10 @@ public class Obstacle extends Entity {
 				position.y
 		);
 		
+		tick++;
+		
 		super.tick();
-
+		
 	}
 
 }

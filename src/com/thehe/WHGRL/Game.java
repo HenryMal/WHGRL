@@ -7,8 +7,8 @@ import java.awt.geom.Rectangle2D;
 import java.io.FileNotFoundException;
 
 import com.thehe.WHGRL.entity.Coin;
-import com.thehe.WHGRL.entity.Obstacle;
 import com.thehe.WHGRL.entity.Player;
+import com.thehe.WHGRL.entity.obstacles.Obstacle;
 import com.thehe.WHGRL.map.Map;
 import com.thehe.WHGRL.map.Tile;
 import com.thehe.WHGRL.utils.Vector;
@@ -27,14 +27,11 @@ public class Game {
 	
 	public Game() throws FileNotFoundException {
 		
-		map = new Map("maps/level_4.txt");
+		map = new Map("maps/level_7.txt");
 		
 		spawnPlayer();
 		setUpGoalArea();
-		
-
-
-
+	
 	}
 	
 	public void spawnPlayer() {
@@ -175,7 +172,7 @@ public class Game {
 
 		if(levelEnded) {
 
-			map = new Map("maps/level_4.txt");
+			map = new Map("maps/level_1.txt");
 			spawnPlayer();
 			setUpGoalArea();
 			coinsCollected = 0;
